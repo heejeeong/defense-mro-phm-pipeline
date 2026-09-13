@@ -21,6 +21,23 @@
 - 소형 객체 탐지 정밀도 향상을 위한 SAHI 적용
 - On-Premise 경량화 sLLM(Qwen2.5 / Llama-3) 튜닝
 
+### 🧪 Execution Results
+
+#### 1. Vision Engine (YOLO Object Detection)
+
+- Detected small objects and anomalies from military operational datasets.
+- Result images saved in `docs/result_images/`.
+
+#### 2. On-Premise RAG Engine (LangChain + Local sLLM)
+
+- Successfully retrieved military situational captions and generated SOP recommendations.
+- **Sample Query**: "3번 구역 미세 이상물체 탐지 시 조치 절차는?"
+- **Sample Output**:
+  1. 해당 구역의 영상을 고정하고 동일 위치를 재탐지합니다.
+  2. 관제 담당자에게 탐지 시각과 위치를 보고하고 인접 센서 상태를 확인합니다.
+  3. 반복 탐지 시 정비 담당자가 현장 외관과 체결 상태를 점검합니다.
+  4. 탐지 및 조치 결과를 운용 로그에 기록합니다.
+
 ## Project Structure
 
 ```text
