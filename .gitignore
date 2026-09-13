@@ -5,6 +5,8 @@ __pycache__/
 venv/
 
 # Local datasets and generated artifacts
+data/*
+!data/raw_sample/
 data/raw_sample/*
 !data/raw_sample/.gitkeep
 docs/result_images/*
