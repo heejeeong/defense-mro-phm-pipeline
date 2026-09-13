@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Local datasets and generated artifacts
+data/raw_sample/*
+!data/raw_sample/.gitkeep
+docs/result_images/*
+!docs/result_images/.gitkeep
+*.pt
+*.onnx
+
+# Vector databases and local model files
+chroma_db/
+models/

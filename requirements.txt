@@ -1,0 +1,7 @@
+# Vision
+ultralytics
+
+# RAG and vector search
+langchain
+langchain-community
+chromadb
