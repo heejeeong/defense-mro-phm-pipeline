@@ -11,6 +11,8 @@ data/raw_sample/*
 !data/raw_sample/.gitkeep
 docs/result_images/*
 !docs/result_images/.gitkeep
+!docs/result_images/*_detected.jpg
+!docs/result_images/*_end_to_end.jpg
 *.pt
 *.onnx
 

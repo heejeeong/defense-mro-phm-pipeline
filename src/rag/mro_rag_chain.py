@@ -1,98 +1,87 @@
-"""On-Premise defense RAG demonstration using local sample captions."""
+"""On-Premise defense RAG chain using Chroma retrieval and Ollama generation."""
 
 import json
-import re
 from pathlib import Path
+
+try:
+    from .ingest_caption import CHROMA_DIR, build_vector_store
+except ImportError:
+    from ingest_caption import CHROMA_DIR, build_vector_store
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 LABEL_DIR = PROJECT_ROOT / "data" / "sample" / "labels"
 DEFAULT_QUERY = "3번 구역 미세 이상물체 탐지 시 조치 절차는?"
 
-FALLBACK_LOGS = [
-    "3번 구역 감시 영상에서 미세 이상물체가 탐지되었다. 해당 구역의 영상을 고정하고 재탐지한다.",
-    "이상 징후 발생 시 현장 접근 전 관제 담당자에게 상황을 보고하고 인접 센서의 상태를 확인한다.",
-    "동일 위치에서 이상물체가 반복 탐지되면 정비 담당자가 외관과 체결 상태를 점검하고 조치 결과를 기록한다.",
-    "오탐으로 판단되더라도 탐지 시각, 구역, 객체 유형, 조치 결과를 운용 로그에 남긴다.",
-]
+def retrieve_documents(query: str, collection, top_k: int = 3) -> list[dict]:
+    """Retrieve semantically similar caption chunks from Chroma."""
+    result = collection.query(query_texts=[query], n_results=top_k)
+    documents = result.get("documents", [[]])[0]
+    metadatas = result.get("metadatas", [[]])[0]
+    unique = []
+    seen = set()
+    for text, metadata in zip(documents, metadatas):
+        key = (metadata.get("source", ""), text)
+        if key not in seen:
+            unique.append({"text": text, "metadata": metadata})
+            seen.add(key)
+    return unique
 
 
-def load_documents():
-    """Load caption documents from sample JSON labels, with an offline fallback."""
-    try:
-        from langchain_core.documents import Document
-    except ImportError as error:
-        raise RuntimeError(
-            "LangChain is required. Install it with: python -m pip install langchain"
-        ) from error
+def generate_with_ollama(question: str, context: list[dict], model: str = "llama3.2:3b") -> str:
+    """Generate a grounded answer through the local Ollama HTTP API."""
+    import json as json_module
+    from urllib.error import URLError
+    from urllib.request import Request, urlopen
 
-    documents = []
-    for json_path in sorted(LABEL_DIR.glob("*.json")):
-        try:
-            payload = json.loads(json_path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError):
-            continue
-        for annotation in payload.get("annotations", []):
-            caption = str(annotation.get("caption", "")).strip()
-            if caption:
-                documents.append(
-                    Document(
-                        page_content=caption,
-                        metadata={"source": json_path.name, "zone": payload.get("meta", {}).get("spot")},
-                    )
-                )
-
-    if documents:
-        return documents
-    return [Document(page_content=text, metadata={"source": "offline_fallback"}) for text in FALLBACK_LOGS]
-
-
-def retrieve_documents(query: str, documents: list, top_k: int = 3) -> list:
-    """Retrieve documents using a deterministic local token-overlap scorer."""
-    tokens = set(re.findall(r"[0-9A-Za-z가-힣]+", query.lower()))
-    ranked = sorted(
-        documents,
-        key=lambda document: len(tokens & set(re.findall(r"[0-9A-Za-z가-힣]+", document.page_content.lower()))),
-        reverse=True,
+    context_text = "\n".join(
+        f"[{item['metadata'].get('source', 'unknown')}] {item['text']}" for item in context
     )
-    return ranked[:top_k]
-
-
-def build_qa_chain(documents: list):
-    """Build a LangChain Runnable chain with a local retriever and answer function."""
+    prompt = (
+        "당신은 국방 정비지원 담당자입니다. 반드시 아래 검색 근거에만 근거해 한국어로 답변하세요.\n"
+        "근거에 없는 장치 설정, 센서 성능, 원인, 절차를 추정하지 마세요.\n"
+        "근거에 대응 절차가 없으면 '검색 근거에 해당 절차가 없습니다'라고 답하세요.\n"
+        "답변은 4개 이하의 짧은 항목으로 작성하고, 각 항목 끝에 실제 근거의 [source]를 그대로 표시하세요.\n\n"
+        f"검색 근거:\n{context_text}\n\n질의: {question}"
+    )
+    payload = json_module.dumps(
+        {"model": model, "prompt": prompt, "stream": False, "options": {"temperature": 0}}
+    ).encode("utf-8")
+    request = Request(
+        "http://localhost:11434/api/generate",
+        data=payload,
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
     try:
-        from langchain_core.runnables import RunnableLambda, RunnablePassthrough
-    except ImportError as error:
+        with urlopen(request, timeout=120) as response:
+            return json_module.loads(response.read().decode("utf-8"))["response"].strip()
+    except (URLError, TimeoutError) as error:
         raise RuntimeError(
-            "LangChain is required. Install it with: python -m pip install langchain"
+            "Ollama is unavailable. Install Ollama, run `ollama pull llama3.2:3b`, and retry."
         ) from error
 
-    retriever = RunnableLambda(lambda query: retrieve_documents(query, documents))
 
-    def answer(inputs: dict) -> str:
-        context = inputs["context"]
-        context_text = "\n".join(f"- {document.page_content}" for document in context)
-        return (
-            "[On-Premise Defense AI Assistant]\n"
-            f"질의: {inputs['question']}\n\n"
-            "검색된 현장 근거:\n"
-            f"{context_text}\n\n"
-            "권고 조치:\n"
-            "1. 해당 구역의 영상을 고정하고 동일 위치를 재탐지합니다.\n"
-            "2. 관제 담당자에게 탐지 시각과 위치를 보고하고 인접 센서 상태를 확인합니다.\n"
-            "3. 반복 탐지 시 정비 담당자가 현장 외관과 체결 상태를 점검합니다.\n"
-            "4. 탐지 및 조치 결과를 운용 로그에 기록합니다."
-        )
-
-    return {"context": retriever, "question": RunnablePassthrough()} | RunnableLambda(answer)
+def answer_query(question: str, collection=None, top_k: int = 3, use_ollama: bool = True) -> dict:
+    """Retrieve evidence and optionally generate a local-LLM answer."""
+    collection = collection or build_vector_store()
+    context = retrieve_documents(question, collection, top_k=top_k)
+    answer = generate_with_ollama(question, context) if use_ollama else "Ollama generation skipped."
+    sources = []
+    seen_sources = set()
+    for item in context:
+        source = item["metadata"].get("source", "unknown")
+        if source not in seen_sources:
+            sources.append(item["metadata"])
+            seen_sources.add(source)
+    return {"question": question, "answer": answer, "sources": sources}
 
 
 def main() -> None:
     """Run a local operational guidance query without external APIs."""
-    documents = load_documents()
-    qa_chain = build_qa_chain(documents)
-    print(f"Loaded {len(documents)} local defense documents.")
-    print(qa_chain.invoke(DEFAULT_QUERY))
+    result = answer_query(DEFAULT_QUERY)
+    print(f"Chroma path: {CHROMA_DIR}")
+    print(json.dumps(result, ensure_ascii=False, indent=2))
 
 
 if __name__ == "__main__":

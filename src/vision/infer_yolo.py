@@ -4,11 +4,10 @@ from pathlib import Path
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-BEST_WEIGHTS = PROJECT_ROOT / "runs" / "train" / "defense_anomaly_exp" / "weights" / "best.pt"
-FALLBACK_WEIGHTS = PROJECT_ROOT / "yolov8n.pt"
+BEST_WEIGHTS = PROJECT_ROOT / "runs" / "train" / "defense_anomaly_exp-2" / "weights" / "best.pt"
 SAMPLE_IMAGE_DIR = PROJECT_ROOT / "data" / "sample" / "images"
 RESULT_DIR = PROJECT_ROOT / "docs" / "result_images"
-SAMPLE_COUNT = 3
+SAMPLE_COUNT = 5
 
 
 def infer_yolo() -> list[Path]:
@@ -29,7 +28,11 @@ def infer_yolo() -> list[Path]:
     if not image_paths:
         raise FileNotFoundError(f"No sample images found in {SAMPLE_IMAGE_DIR}")
 
-    weights = BEST_WEIGHTS if BEST_WEIGHTS.is_file() else FALLBACK_WEIGHTS
+    if not BEST_WEIGHTS.is_file():
+        raise FileNotFoundError(
+            f"Fine-tuned weights not found: {BEST_WEIGHTS}. Run src/vision/train_yolo.py first."
+        )
+    weights = BEST_WEIGHTS
     print(f"Using weights: {weights}")
     model = YOLO(str(weights))
     results = model.predict(source=[str(path) for path in image_paths], verbose=False)
