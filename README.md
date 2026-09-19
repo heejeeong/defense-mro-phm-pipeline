@@ -40,6 +40,7 @@ flowchart LR
 - Retrieval output includes source JSON and image metadata
 - Generation: Ollama local model, default `llama3.2:3b`
 - The project-owned [`response_guidance.md`](docs/response_guidance.md) is explicitly labeled as a prototype checklist, not an official maintenance manual.
+- Latest ten-question E2E grounding run: **9/10 passed**; retrieved source was shown correctly in **10/10** answers and expected evidence terms appeared in **9/10**. Details are in [`e2e_grounding_report.md`](docs/e2e_grounding_report.md).
 
 Example query:
 
@@ -62,6 +63,9 @@ python src\vision\infer_yolo.py
 # Verify Vision -> Chroma retrieval without an LLM
 python src\pipeline\end_to_end.py --no-ollama
 
+# Run ten grounded-answer checks and write docs/e2e_grounding_report.{json,md}
+python src\rag\evaluate_grounding.py
+
 # Install Ollama separately, then pull a local model
 ollama pull llama3.2:3b
 
@@ -74,6 +78,7 @@ python src\pipeline\end_to_end.py
 - This is an operational anomaly-detection and response-support prototype, not a complete PHM system. It does not yet perform sensor time-series diagnosis or RUL prediction.
 - The validation set is a small sample, so the reported metrics are evidence of a working experiment rather than production performance.
 - The local LLM response depends on the Ollama model installed on the execution machine; retrieved source metadata is always returned independently.
+- The ten-question E2E report checks that retrieved sources are shown, citations belong to retrieved sources, and expected evidence terms are present. It is a reproducible lexical check, not a complete semantic proof that no unsupported claim was generated.
 
 ## Project Structure
 

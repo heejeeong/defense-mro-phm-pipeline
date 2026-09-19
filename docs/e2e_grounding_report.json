@@ -1,0 +1,188 @@
+{
+  "generated_at": "2026-09-19T16:07:03.877225+00:00",
+  "mode": "ollama_generation",
+  "total": 10,
+  "passed": 9,
+  "pass_rate": 0.9,
+  "source_compliant": 10,
+  "source_compliance_rate": 1.0,
+  "evidence_supported": 9,
+  "evidence_support_rate": 0.9,
+  "results": [
+    {
+      "id": "Q01",
+      "question": "이상 객체가 처음 탐지되면 가장 먼저 무엇을 해야 하나요?",
+      "answer": "1. first, 해당 영상과 탐지 시각을 고정하고 동일 위치를 재탐지한다. \n[docs/response_guidance.md]\n\n2. 동일 위치에서 반복 탐지되면 관제 담당자에게 위치와 탐지 결과를 보고하고 인접 센서 상태를 확인한다. \n[docs/response_guidance.md]\n\n3. 반복 탐지가 확인되면 정비 담당자가 현장 외관과 체결 상태를 점검하고 조치 결과를 운용 로그에 기록한다. \n[docs/response_guidance.md]",
+      "retrieved_sources": [
+        "docs/response_guidance.md"
+      ],
+      "cited_sources": [
+        "docs/response_guidance.md"
+      ],
+      "matched_evidence_terms": [
+        "탐지 시각",
+        "동일 위치",
+        "재탐지"
+      ],
+      "passed": true,
+      "failures": []
+    },
+    {
+      "id": "Q02",
+      "question": "미세 이상물체 탐지 직후 영상 확인 절차를 알려주세요.",
+      "answer": "미세 이상물체 탐지 직후 영상 확인 절차는 다음과 같습니다.\n\n1. 영상 확인: 탐지 직후 영상 확인을 위해 영상과 탐지 시각을 고정하고 동일 위치를 재탐지합니다. [docs/response_guidance.md]\n2. 관제 담당자 báo고: 동일 위치에서 반복 탐지되면 관제 담당자에게 위치와 탐지 결과를 보고하고 인접 센서 상태를 확인합니다. [docs/response_guidance.md]\n3. 정비 담당자 조치: 반복 탐지가 확인되면 정비 담당자가 현장 외관과 체결 상태를 점검하고 조치 결과를 운용 로그에 기록합니다. [docs/response_guidance.md]",
+      "retrieved_sources": [
+        "docs/response_guidance.md"
+      ],
+      "cited_sources": [
+        "docs/response_guidance.md"
+      ],
+      "matched_evidence_terms": [
+        "영상",
+        "탐지 시각",
+        "고정"
+      ],
+      "passed": true,
+      "failures": []
+    },
+    {
+      "id": "Q03",
+      "question": "첫 탐지의 오탐 여부를 확인하기 위한 근거 문서 절차는 무엇인가요?",
+      "answer": "첫 탐지의 오탐 여부를 확인하기 위한 근거 문서 절차는 다음과 같습니다.\n\n1. 첫 탐지의 오탐 여부를 확인하기 위한 근거 문서 절차는 [docs/response_guidance.md]에 정의되어 있습니다. \n2. 첫 탐지의 오탐 여부를 확인하기 위한 근거 문서 절차는 [docs/response_guidance.md]에 정의되어 있습니다. \n3. 첫 탐지의 오탐 여부를 확인하기 위한 근거 문서 절차는 [docs/response_guidance.md]에 정의되어 있습니다. \n4. 첫 탐지의 오탐 여부를 확인하기 위한 근거 문서 절차는 [docs/response_guidance.md]에 정의되어 있습니다.",
+      "retrieved_sources": [
+        "docs/response_guidance.md"
+      ],
+      "cited_sources": [
+        "docs/response_guidance.md"
+      ],
+      "matched_evidence_terms": [],
+      "passed": false,
+      "failures": [
+        "fewer than two expected evidence terms are present"
+      ]
+    },
+    {
+      "id": "Q04",
+      "question": "같은 위치에서 이상 객체가 반복되면 관제 담당자에게 무엇을 보고하나요?",
+      "answer": "1. 관제 담당자는 같은 위치에서 이상 객체가 반복 탐지되면 위치와 탐지 결과를 관제 담당자에게 보고합니다. [docs/response_guidance.md]\n2. 관제 담당자는 반복 탐지가 확인되면 정비 담당자가 현장 외관과 체결 상태를 점검하고 조치 결과를 운용 로그에 기록합니다. [docs/response_guidance.md]\n3. 이상 객체가 탐지되면 먼저 해당 영상과 탐지 시각을 고정하고 동일 위치를 재탐지합니다. [docs/response_guidance.md]",
+      "retrieved_sources": [
+        "docs/response_guidance.md"
+      ],
+      "cited_sources": [
+        "docs/response_guidance.md"
+      ],
+      "matched_evidence_terms": [
+        "위치",
+        "탐지 결과",
+        "보고"
+      ],
+      "passed": true,
+      "failures": []
+    },
+    {
+      "id": "Q05",
+      "question": "반복 탐지 시 인접 설비와 관련해 확인할 항목은 무엇인가요?",
+      "answer": "1. 인접 센서 상태를 확인한다. [docs/response_guidance.md]\n2. 관제 담당자가 인접 센서 상태를 확인하고, 위치와 탐지 결과를 보고한다. [docs/response_guidance.md]\n3. 관제 담당자가 인접 센서 상태를 확인하고, 위치와 탐지 결과를 보고한 후, 정비 담당자가 현장 외관과 체결 상태를 점검하고 조치 결과를 운용 로그에 기록한다. [docs/response_guidance.md]",
+      "retrieved_sources": [
+        "docs/response_guidance.md"
+      ],
+      "cited_sources": [
+        "docs/response_guidance.md"
+      ],
+      "matched_evidence_terms": [
+        "인접 센서",
+        "상태",
+        "확인"
+      ],
+      "passed": true,
+      "failures": []
+    },
+    {
+      "id": "Q06",
+      "question": "반복 이상이 확인되었을 때 관제 보고와 센서 점검 순서를 알려주세요.",
+      "answer": "1. 관제 보고와 센서 점검 순서는 관제 담당자가 관제 보고를 하고, 센서 점검을 하기 전에 센서 점검을 하게 됩니다. \n[docs/response_guidance.md]\n\n2. 관제 담당자가 관제 보고를 하고, 센서 점검을 하기 전에 센서 점검을 하게 됩니다. \n[docs/response_guidance.md]\n\n3. 관제 담당자가 관제 보고를 하고, 센서 점검을 하기 전에 센서 점검을 하게 됩니다. \n[docs/response_guidance.md]\n\n4. 관제 담당자가 관제 보고를 하고, 센서 점검을 하기 전에 센서 점검을 하게 됩니다. \n[docs/response_guidance.md]",
+      "retrieved_sources": [
+        "docs/response_guidance.md"
+      ],
+      "cited_sources": [
+        "docs/response_guidance.md"
+      ],
+      "matched_evidence_terms": [
+        "관제",
+        "보고"
+      ],
+      "passed": true,
+      "failures": []
+    },
+    {
+      "id": "Q07",
+      "question": "반복 탐지 후 정비 담당자는 현장에서 무엇을 점검해야 하나요?",
+      "answer": "1. 현장 외관을 점검해야 합니다. [docs/response_guidance.md]\n2. 체결 상태를 점검해야 합니다. [docs/response_guidance.md]\n3. 조치 결과를 운용 로그에 기록해야 합니다. [docs/response_guidance.md]\n4. None",
+      "retrieved_sources": [
+        "docs/response_guidance.md"
+      ],
+      "cited_sources": [
+        "docs/response_guidance.md"
+      ],
+      "matched_evidence_terms": [
+        "외관",
+        "체결 상태",
+        "점검"
+      ],
+      "passed": true,
+      "failures": []
+    },
+    {
+      "id": "Q08",
+      "question": "정비 담당자의 반복 이상 확인 후 현장 점검 범위를 알려주세요.",
+      "answer": "1. 반복 탐지 확인 후 현장 점검 범위를 알려주면, 정비 담당자는 현장 외관과 체결 상태를 점검할 수 있는 범위를 결정합니다. \n[docs/response_guidance.md]\n\n2. 동일 위치에서 반복 탐지되면, 관제 담당자는 위치와 탐지 결과를 보고하고 인접 센서 상태를 확인합니다. \n[docs/response_guidance.md]\n\n3. 이상 객체가 탐지되면, 먼저 해당 영상과 탐지 시각을 고정하고 동일 위치를 재탐지합니다. \n[docs/response_guidance.md]\n\n4. 검색 근거에 해당 절차가 없습니다. \n[docs/response_guidance.md]",
+      "retrieved_sources": [
+        "docs/response_guidance.md"
+      ],
+      "cited_sources": [
+        "docs/response_guidance.md"
+      ],
+      "matched_evidence_terms": [
+        "현장",
+        "외관",
+        "체결 상태"
+      ],
+      "passed": true,
+      "failures": []
+    },
+    {
+      "id": "Q09",
+      "question": "탐지 대응 결과는 어디에 기록해야 하나요?",
+      "answer": "1. 탐지 대응 결과는 운용 로그에 기록해야 합니다. [docs/response_guidance.md]\n2. 탐지 대응 결과는 운용 로그에 기록해야 합니다. [docs/response_guidance.md]\n3. 탐지 대응 결과는 운용 로그에 기록해야 합니다. [docs/response_guidance.md]\n4. 탐지 대응 결과는 운용 로그에 기록해야 합니다. [docs/response_guidance.md]",
+      "retrieved_sources": [
+        "docs/response_guidance.md"
+      ],
+      "cited_sources": [
+        "docs/response_guidance.md"
+      ],
+      "matched_evidence_terms": [
+        "운용 로그",
+        "기록"
+      ],
+      "passed": true,
+      "failures": []
+    },
+    {
+      "id": "Q10",
+      "question": "이상 객체 대응을 완료한 뒤 기록할 내용과 기록 위치를 알려주세요.",
+      "answer": "1. 기록할 내용: 운용 로그에 조치 결과를 기록합니다. [docs/response_guidance.md]\n2. 기록 위치: 운용 로그 [docs/response_guidance.md]\n3. 기록 시간: 조치 결과를 기록할 때는 현재 시간을 확인하여 기록합니다. [docs/response_guidance.md]\n4. 기록 방법: 운용 로그에 조치 결과를 기록할 때는 '이상 객체 대응 완료'라는 문장을 추가하여 기록합니다. [docs/response_guidance.md]",
+      "retrieved_sources": [
+        "docs/response_guidance.md"
+      ],
+      "cited_sources": [
+        "docs/response_guidance.md"
+      ],
+      "matched_evidence_terms": [
+        "조치 결과",
+        "운용 로그"
+      ],
+      "passed": true,
+      "failures": []
+    }
+  ]
+}
